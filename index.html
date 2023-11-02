@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cat Coin Catcher Game</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+
+    #game-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+      border: 1px solid #000;
+      background-color: #e6e6e6;
+    }
+
+    .cat {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: orange;
+    }
+
+    .coin {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: gold;
+    }
+
+    #score {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cat Coin Catcher Game</h1>
+  <p>Use arrow keys to control the cats</p>
+  <p id="score">Score: 0</p>
+  <div id="game-container">
+    <div class="cat" id="cat1" style="left: 50px;"></div>
+    <div class="cat" id="cat2" style="left: 300px;"></div>
+  </div>
+  <audio id="bg-music" autoplay loop>
+    <source src="your-music-file.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const cat1 = document.getElementById("cat1");
+    const cat2 = document.getElementById("cat2");
+    const scoreDisplay = document.getElementById("score");
+    const gameContainer = document.getElementById("game-container");
+    const bgMusic = document.getElementById("bg-music");
+
+    let score = 0;
+
+    function moveCats(event) {
+      const catSpeed = 10;
+      const keyCode = event.keyCode;
+      const cat1Left = parseInt(cat1.style.left);
+      const cat2Left = parseInt(cat2.style.left);
+
+      if (keyCode === 37 && cat1Left > 0) {
+        cat1.style.left = cat1Left - catSpeed + "px";
+      } else if (keyCode === 39 && cat1Left < gameContainer.offsetWidth - cat1.offsetWidth) {
+        cat1.style.left = cat1Left + catSpeed + "px";
+      } else if (keyCode === 65 && cat2Left > 0) {
+        cat2.style.left = cat2Left - catSpeed + "px";
+      } else if (keyCode === 68 && cat2Left < gameContainer.offsetWidth - cat2.offsetWidth) {
+        cat2.style.left = cat2Left + catSpeed + "px";
+      }
+    }
+
+    function createCoin() {
+      const coin = document.createElement("div");
+      coin.className = "coin";
+      coin.style.left = Math.random() * (gameContainer.offsetWidth - 20) + "px";
+      gameContainer.appendChild(coin);
+
+      coin.addEventListener("animationiteration", () => {
+        gameContainer.removeChild(coin);
+      });
+
+      coin.addEventListener("animationend", () => {
+        if (coin.parentElement) {
+          gameContainer.removeChild(coin);
+        }
+      });
+    }
+
+    function checkCollision() {
+      const cats = document.querySelectorAll(".cat");
+      const coins = document.querySelectorAll(".coin");
+
+      cats.forEach((cat) => {
+        coins.forEach((coin) => {
+          if (isColliding(cat, coin)) {
+            gameContainer.removeChild(coin);
+            score += 10;
+            scoreDisplay.textContent = "Score: " + score;
+          }
+        });
+      });
+
+      requestAnimationFrame(checkCollision);
+    }
+
+    function isColliding(cat, coin) {
+      const catRect = cat.getBoundingClientRect();
+      const coinRect = coin.getBoundingClientRect();
+      return (
+        catRect.left < coinRect.right &&
+        catRect.right > coinRect.left &&
+        catRect.top < coinRect.bottom &&
+        catRect.bottom > coinRect.top
+      );
+    }
+
+    document.addEventListener("keydown", moveCats);
+
+    setInterval(createCoin, 1000);
+    requestAnimationFrame(checkCollision);
+  </script>
+</body>
+</html>
