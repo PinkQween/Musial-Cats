@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cat Coin Catcher Game</title>
+  <title>Musical Kittens</title>
   <style>
     body {
       background-color: #f0f0f0;
@@ -45,7 +45,7 @@
     <div class="cat" id="cat2" style="left: 300px;"></div>
   </div>
   <audio id="bg-music" autoplay loop>
-    <source src="your-music-file.mp3" type="audio/mpeg">
+    <source src="https://vgmsite.com/soundtracks/doki-doki-literature-club-official-soundtrack/teuphwzhdd/1-14%20Poems%20Are%20Forever%20%28Bonus%20Track%29.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -65,11 +65,9 @@
 
       if (keyCode === 37 && cat1Left > 0) {
         cat1.style.left = cat1Left - catSpeed + "px";
+        cat2.style.left = cat2Left - catSpeed + "px";
       } else if (keyCode === 39 && cat1Left < gameContainer.offsetWidth - cat1.offsetWidth) {
         cat1.style.left = cat1Left + catSpeed + "px";
-      } else if (keyCode === 65 && cat2Left > 0) {
-        cat2.style.left = cat2Left - catSpeed + "px";
-      } else if (keyCode === 68 && cat2Left < gameContainer.offsetWidth - cat2.offsetWidth) {
         cat2.style.left = cat2Left + catSpeed + "px";
       }
     }
